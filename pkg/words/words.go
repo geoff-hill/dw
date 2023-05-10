@@ -1,4 +1,4 @@
-package libdw
+package words
 
 import (
 	"bufio"
@@ -7,17 +7,16 @@ import (
 	"strings"
 )
 
-func HelloWorld() string {
-	return "Hello libdw world";
-}
-
 var wordMap = make(map[string][]string)
 
 func WordMap() map[string][]string {
+	if len(wordMap) == 0 {
+		load()
+	}
 	return wordMap;
 }
 
-func LoadWordlist() {
+func load() {
 	myfile, err := os.Open("/usr/share/dict/words")  //open the file
 	if err != nil {
 		fmt.Println("Error opening file:", err)
@@ -27,7 +26,7 @@ func LoadWordlist() {
 
 	scanner := bufio.NewScanner(myfile)  //scan the contents of a file and print line by line
 	
-	for i := 0; i < 1000 && scanner.Scan(); i++ {
+	for i := 0; scanner.Scan(); i++ {
 		line := scanner.Text()
 		fields := strings.Fields(line)
 

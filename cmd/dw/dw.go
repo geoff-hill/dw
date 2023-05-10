@@ -7,7 +7,7 @@ import (
 	"os"
 
 	"github.com/urfave/cli/v2"
-	"github.com/geoff-hill/dw/pkg/libdw"
+	"github.com/geoff-hill/dw/pkg/lookup"
 )
 
 func main() {
@@ -28,7 +28,14 @@ func main() {
 				Flags: []cli.Flag{},
 			},
 		},
-	}
+		Flags: []cli.Flag{
+			&cli.BoolFlag{
+				Name:     "verbose",
+				Aliases:  []string{"v"},
+				Usage:    "shows messages",
+			},
+		},
+}
   
     err := app.Run(os.Args)
     if err !=  nil  {
@@ -36,16 +43,17 @@ func main() {
     }
 }
 
-func  LookupAction(c *cli.Context)  error  {
+func LookupAction(c *cli.Context)  error  {
 	if  c.Args().Len()  ==  0  {
 		return errors.New("At least one argument is expected")
 	}
 
 	// validate all args are the right size
 	// read fordlists 
-
-	libdw.LoadWordlist();
-	fmt.Print(libdw.WordMap())
+    if c.Bool("verbose") {
+		fmt.Println(lookup.Keys())
+	}
+	fmt.Print(lookup.LookupByKey(c.Args().Get(0)))
 	return  nil
 }
 
